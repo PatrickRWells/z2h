@@ -18,7 +18,7 @@ where
     let formatting_layer = BunyanFormattingLayer::new(
         name.into(),
         // Output the JSON log to stdout
-        std::io::stdout,
+        sink,
     );
 
     let subscriber = Registry::default()

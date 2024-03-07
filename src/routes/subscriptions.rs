@@ -1,7 +1,5 @@
 use actix_web::{web, HttpResponse, Responder};
 use sqlx::PgPool;
-use tracing::Instrument;
-use uuid;
 #[derive(serde::Deserialize)]
 pub(crate) struct FormData {
     email: String,
