@@ -1,11 +1,10 @@
+use once_cell::sync::Lazy;
+use secrecy::ExposeSecret;
 use sqlx::{Connection, Executor, PgConnection, PgPool};
 use std::net::TcpListener;
 use uuid::Uuid;
 use zero2prod::configuration::{get_configuration, DatabaseSettings};
 use zero2prod::telemetry::{get_subscriber, init_subscriber};
-use once_cell::sync::Lazy;
-use secrecy::ExposeSecret;
-
 
 static TRACING: Lazy<()> = Lazy::new(|| {
     let default_filter_level = "test".to_string();
@@ -24,8 +23,7 @@ pub struct TestApp {
 }
 
 async fn spawn_app() -> TestApp {
-
-    Lazy::force(&TRACING); 
+    Lazy::force(&TRACING);
     let listener = TcpListener::bind("127.0.0.1:0").expect("Failed to bind random port");
     let port = listener.local_addr().unwrap().port();
     let mut configuration = get_configuration().expect("Failed to read configuration.");
@@ -44,9 +42,10 @@ async fn spawn_app() -> TestApp {
 }
 
 pub async fn configure_database(config: &DatabaseSettings) -> PgPool {
-    let mut connection = PgConnection::connect(&config.connection_string_without_db().expose_secret())
-        .await
-        .expect("Failed to connect to Postgres.");
+    let mut connection =
+        PgConnection::connect(&config.connection_string_without_db().expose_secret())
+            .await
+            .expect("Failed to connect to Postgres.");
     connection
         .execute(&*format!(
             r#"CREATE DATABASE "{}";"#,
@@ -85,7 +84,6 @@ async fn subscribe_returns_200_for_valid_form() {
     let client = reqwest::Client::new();
     let body = "name=le%20guin&email=ursula_le_guin%40gmail.com";
     let response = client
-
         .post(&format!("{}/subscriptions", &test_app.address))
         .header("Content-Type", "application/x-www-form-urlencoded")
         .body(body)
