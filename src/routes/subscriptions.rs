@@ -1,7 +1,7 @@
 use actix_web::{web, HttpResponse, Responder};
 use sqlx::PgPool;
 #[derive(serde::Deserialize)]
-pub(crate) struct FormData {
+pub struct FormData {
     email: String,
     name: String,
 }
